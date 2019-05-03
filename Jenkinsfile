@@ -1,5 +1,10 @@
 pipeline {
   agent any
+  //Opciones generales del proceso
+  options {
+    //Si por alguna razón se queda atorado. Se abortara en una hora.
+    timeout(time: 1, unit: 'HOURS') 
+  }
   stages {
     stage('build') {
       //Puedo establecer variables de ambiente
@@ -71,6 +76,12 @@ pipeline {
         }
       }
       
+    }
+    stage ('En un PullRequest') {
+      when { changeRequest target: 'master' }
+      steps {
+        sh 'Esto es un pull PullRequest. Bienvenidas contribuciones'
+      }
     }
     stage ('Deploy on production') {
       steps {
