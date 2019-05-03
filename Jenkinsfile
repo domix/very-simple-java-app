@@ -2,7 +2,7 @@ pipeline {
   agent any
   stages {
     stage('build') {
-      steps {
+      steps { 
         withCredentials([
           [$class: 'UsernamePasswordMultiBinding',
             credentialsId: 'docker_registry_domix',
@@ -18,11 +18,11 @@ pipeline {
       stage ('Deploy on production') {
           //agent {label 'slave01'}
           steps {
-            timeout (time: 1, unit: 'HOURS') {
+            timeout (time: 2, unit: 'MINUTES') {
               //input message
               input message : 'Approve PRODUCTION environment?'
             }
-            sh 'echo Apribacion a produccion'
+            sh 'echo Apribacion a produccion  '
           }
           post {
             success {
