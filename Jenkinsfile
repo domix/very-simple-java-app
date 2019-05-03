@@ -10,16 +10,29 @@ pipeline {
             passwordVariable: 'CONTAINER_REGISTRY_PASSWORD']
           ]) {
             sh './buildImage.sh'
-            timeout(time: 5, unit: "MINUTES") {
-              def userInput = input message: '¿Quieres crear la imagen de Docker?', ok: 'No'
-
-              println userInput.dump()
-            }
             //sh './gradlew pushImage'
-            //sh 'echo Hola'
+            sh 'echo Hola'
           }
         }
       }
+      stage ('Deploy on production') {
+          //agent {label 'slave01'}
+          steps {
+            timeout (time: 1, unit: 'HOURS') {
+              //input message
+              input message : 'Approve PRODUCTION environment?'
+            }
+            sh 'echo Apribacion a produccion'
+          }
+          post {
+            success {
+              echo 'Deployment on PRODUCTION is successful'
+            }
+            failure {
+              echo 'Deployment failure on PRODUCTION'
+            }
+          }
+        }
       /*stage('deploy') {
         steps {
           withCredentials([
