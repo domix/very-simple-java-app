@@ -10,7 +10,12 @@ pipeline {
             passwordVariable: 'CONTAINER_REGISTRY_PASSWORD']
           ]) {
             sh './buildImage.sh'
-            sh './gradlew pushImage'
+            timeout(time: 5, unit: "MINUTES") {
+              def userInput = input message: '¿Quieres crear la imagen de Docker?', ok: 'No'
+
+              println userInput.dump()
+            }
+            //sh './gradlew pushImage'
             //sh 'echo Hola'
           }
         }
