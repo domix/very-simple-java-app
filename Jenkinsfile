@@ -2,12 +2,19 @@ pipeline {
   agent any
   stages {
     stage('build') {
+      //Puedo establecer variables de ambiente
+      environment {
+        //AN_ACCESS_KEY = credentials('id-de-la-credencial')
+        DEMO_KEY = 'foo_bar'
+      }
       steps { 
+        sh 'echo $DEMO_KEY'
         sh './buildImage.sh'
       }
     }
 
     stage('Quality Analysis') {
+      //Podemos ejecutar tareas en paralelo
       parallel {
         stage ('Integration Test') {
           agent any
@@ -36,12 +43,32 @@ pipeline {
       }
     }
     stage('develop') {
+      //Este stage solo se ejecutará si cumple la condición definida.
       when {
+        //En este caso, solo si el branch se llama develop
         branch "develop"
+        //Pero podria ser un tag.
+        //buildingTag()
       }
       steps {
         sh 'echo Generar paquete para Develop'
       }
+    }
+    stage('Branch') {
+      //En cualquier otro branch diferente de master
+      when { not { branch 'master' } }
+      
+      parallel {
+        stage('paso 1') {
+          steps {
+            sh './gradlew clean classes'
+          }
+        }
+        stage('paso 2') {
+          sh 'echo En paralelo'
+        }
+      }
+      
     }
     stage ('Deploy on production') {
       steps {
