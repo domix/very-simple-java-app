@@ -6,6 +6,22 @@ pipeline {
         sh './buildImage.sh'
       }
     }
+
+    stage('Quality Analysis') {
+      parallel {
+        stage ('Integration Test') {
+          agent any
+          steps {
+            echo 'Run integration tests here...'
+          }
+        }
+        stage('Sonar Scan') {
+          steps {
+            sh 'echo Publicando reportes a Sonar'
+          }
+        }
+      }
+    }
     stage('push') {
       steps {
         script {
@@ -13,8 +29,6 @@ pipeline {
           parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
         }
         echo "scope ${env.RELEASE_SCOPE}"
-      }
-      steps { 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_registry_domix', usernameVariable: 'CONTAINER_REGISTRY_USERNAME', passwordVariable: 'CONTAINER_REGISTRY_PASSWORD']]) {
           //sh './gradlew pushImage'
           sh 'echo Publicación de la imagen en Container Registry'
