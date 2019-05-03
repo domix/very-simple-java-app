@@ -14,6 +14,14 @@ pipeline {
         }
       }
     }
+    stage('develop') {
+      when {
+        branch "develop"
+      }
+      steps {
+        sh 'echo Generar paquete para Develop'
+      }
+    }
     stage ('Deploy on production') {
       steps {
         timeout (time: 5, unit: 'MINUTES') {
