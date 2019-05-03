@@ -7,6 +7,13 @@ pipeline {
       }
     }
     stage('push') {
+      steps {
+        script {
+          env.RELEASE_SCOPE = input message: 'User input required', ok: 'Release!',
+          parameters: [choice(name: 'RELEASE_SCOPE', choices: 'patch\nminor\nmajor', description: 'What is the release scope?')]
+        }
+        echo "scope ${env.RELEASE_SCOPE}"
+      }
       steps { 
         withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'docker_registry_domix', usernameVariable: 'CONTAINER_REGISTRY_USERNAME', passwordVariable: 'CONTAINER_REGISTRY_PASSWORD']]) {
           //sh './gradlew pushImage'
@@ -24,7 +31,9 @@ pipeline {
     }
     stage ('Deploy on production') {
       steps {
-        timeout (time: 5, unit: 'MINUTES') {
+        //Con este timeout, si no se da una respuesta en el tiempo definido.
+        //Se aborta la ejecución
+        timeout (time: 1, unit: 'MINUTES') {
           input message : 'Despliegue en Kubernetes?'
         }
         withCredentials([
