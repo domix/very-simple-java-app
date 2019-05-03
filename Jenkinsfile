@@ -65,7 +65,9 @@ pipeline {
           }
         }
         stage('paso 2') {
-          sh 'echo En paralelo esta tarea'
+          steps {
+            sh 'echo En paralelo esta tarea'
+          }
         }
       }
       
