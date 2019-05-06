@@ -16,10 +16,10 @@ pipeline {
     stage('Quality Analysis') {
       //Podemos ejecutar tareas en paralelo
       parallel {
-        stage('Integration Test') {
+        stage ('Integration Test') {
           agent any
           steps {
-            sh 'echo Run integration tests here...'
+            echo 'Run integration tests here...'
           }
         }
         stage('Sonar Scan') {
