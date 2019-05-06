@@ -16,7 +16,7 @@ pipeline {
     stage('Quality Analysis') {
       //Podemos ejecutar tareas en paralelo
       parallel {
-        stage ('Integration Test') {
+        stage('Integration Test') {
           agent any
           steps {
             echo 'Run integration tests here...'
