@@ -54,22 +54,6 @@ pipeline {
         sh 'echo Generar paquete para Develop'
       }
     }
-    stage('Branch') {
-      //En cualquier otro branch diferente de master
-      when { not { branch 'master' } }
-      
-      parallel {
-        stage('paso 1') {
-          steps {
-            sh './gradlew clean classes'
-          }
-        }
-        stage('paso 2') {
-          sh 'echo En paralelo'
-        }
-      }
-      
-    }
     stage ('Deploy on production') {
       steps {
         //Con este timeout, si no se da una respuesta en el tiempo definido.
