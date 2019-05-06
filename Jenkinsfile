@@ -19,7 +19,7 @@ pipeline {
         stage('Integration Test') {
           agent any
           steps {
-            echo 'Run integration tests here...'
+            sh 'echo Run integration tests here...'
           }
         }
         stage('Sonar Scan') {
